@@ -1,6 +1,4 @@
 import numpy as np 
-import sys
-import pdb
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report as get_metric
 from sklearn.metrics import precision_score, recall_score, accuracy_score, f1_score
@@ -52,7 +50,7 @@ def err_softmax(arr: np.ndarray, pred_val: np.ndarray = np.array(0)):       # So
 def relu(arr: np.ndarray):
     return np.maximum(0, arr)
 
-def err_relu(arr: np.ndarray):
+def err_relu(arr: np.ndarray, pred_val: np.ndarray = np.array(0)):
     return np.sign(arr)
 
 def str_to_func(func_name: str):        # Converts string to function
@@ -123,6 +121,8 @@ class NeuralNetwork:
     def cost(self, X: np.ndarray, Y: np.ndarray):       # Calculates cost
         def cost_one(out, y):
             ind = np.argmax(y)
+            if out[ind] == 0:
+                return float('inf')
             return -np.log(out[ind])
         return sum([cost_one(out, y) for out, y in zip(self.output(X), Y)])/(X.shape[0])
     
@@ -133,7 +133,7 @@ class NeuralNetwork:
         input_val = self.output_activation_f(input_val)
         return input_val
 
-    def fit(self, X_train: np.ndarray, Y_train: np.ndarray, batch_size: int, learning_rate, max_epoch: int = 200, stopping_cond: float = 1e-8, save_str: str = ''):        # Trains Neural Networks Model
+    def fit(self, X_train: np.ndarray, Y_train: np.ndarray, batch_size: int, learning_rate, max_epoch: int = 1000, stopping_cond: float = 1e-8, save_str: str = ''):        # Trains Neural Networks Model
         try:
             self.load(batch_size, max_epoch, stopping_cond, save_str)
         except:
@@ -145,7 +145,7 @@ class NeuralNetwork:
             layer_num = len(self.layers)
             prev_err = float('inf')
             curr_err = self.cost(X_data, Y_data)
-            while (num_epoch < max_epoch) and (abs(curr_err-prev_err)>stopping_cond):         # Iteration of each epoch
+            while (num_epoch < max_epoch) and ((curr_err == float('inf')) or (abs(curr_err-prev_err)>stopping_cond)):         # Iteration of each epoch
                 # Shuffling of data
                 perm = np.random.permutation(total_sample)
                 X_data = X_data[perm]
@@ -180,7 +180,7 @@ class NeuralNetwork:
                 print(num_epoch, curr_err, accuracy(Y_test, predict(self.output(X_test))))
                 prev_err = curr_err
                 curr_err = self.cost(X_data, Y_data)
-                if abs(curr_err - prev_err) < stopping_cond:
+                if ((curr_err != float('inf')) and (abs(curr_err-prev_err)<=stopping_cond)):
                     break
             self.save(batch_size, max_epoch, stopping_cond, save_str)
 
@@ -236,12 +236,12 @@ HL = [[512], [512, 256], [512, 256, 128], [512, 256, 128, 64]]
 for hl in HL:
     nn = NeuralNetwork(hl, n, r, 'sigmoid', 'softmax')
     init_time = time()
-    nn.fit(X_train, Y_train_onehot, M, lambda x: 0.01, max_epoch=400)
+    nn.fit(X_train, Y_train_onehot, M, lambda x: 0.01)
     final_time = time()
     if final_time - init_time >= 5: 
         with open('time.txt', 'a') as f:
-            f.write(f'(c) time = {final_time - init_time}\t{hl}')
-    print(f'time = {final_time - init_time}')
+            f.write(f'(c) time = {final_time - init_time}\t{hl}\n')
+    print(f'time = {final_time - init_time}\n')
     print(get_metric(predict(nn.output(X_train)), Y_train))
     print(get_metric(predict(nn.output(X_test)), Y_test))
 
@@ -250,28 +250,28 @@ HL = [[512], [512, 256], [512, 256, 128], [512, 256, 128, 64]]
 for hl in HL:
     nn = NeuralNetwork(hl, n, r, 'sigmoid', 'softmax')
     init_time = time()
-    nn.fit(X_train, Y_train_onehot, M, lambda x: 0.01/np.sqrt(x), save_str='activate', max_epoch=400)
+    nn.fit(X_train, Y_train_onehot, M, lambda x: 0.01/np.sqrt(x), save_str='activate')
     final_time = time()
     if final_time - init_time >= 5: 
         with open('time.txt', 'a') as f:
-            f.write(f'(d) time = {final_time - init_time}\t{hl}')
-    print(f'time = {final_time - init_time}')
+            f.write(f'(d) time = {final_time - init_time}\t{hl}\n')
+    print(f'time = {final_time - init_time}\n')
     print(get_metric(predict(nn.output(X_train)), Y_train))
     print(get_metric(predict(nn.output(X_test)), Y_test))
 
 # Part (e)
-HL = [[512], [512, 256], [512, 256, 128], [512, 256, 128, 64]]
-for hl in HL:
-    nn = NeuralNetwork(hl, n, r, 'sigmoid', 'relu')
-    init_time = time()
-    nn.fit(X_train, Y_train_onehot, M, lambda x: 0.01/np.sqrt(x), save_str='activate', max_epoch=400)
-    final_time = time()
-    if final_time - init_time >= 5: 
-        with open('time.txt', 'a') as f:
-            f.write(f'(e) time = {final_time - init_time}\t{hl}')
-    print(f'time = {final_time - init_time}')
-    print(get_metric(predict(nn.output(X_train)), Y_train))
-    print(get_metric(predict(nn.output(X_test)), Y_test))
+# HL = [[512], [512, 256], [512, 256, 128], [512, 256, 128, 64]]
+# for hl in HL:
+#     nn = NeuralNetwork(hl, n, r, 'sigmoid', 'relu')
+#     init_time = time()
+#     nn.fit(X_train, Y_train_onehot, M, lambda x: 0.01/np.sqrt(x), save_str='relu_activate')
+#     final_time = time()
+#     if final_time - init_time >= 5: 
+#         with open('time.txt', 'a') as f:
+#             f.write(f'(e) time = {final_time - init_time}\t{hl}\n')
+#     print(f'time = {final_time - init_time}\n')
+#     print(get_metric(predict(nn.output(X_train)), Y_train))
+#     print(get_metric(predict(nn.output(X_test)), Y_test))
 
 # Part (f)
 HL = [[512], [512, 256], [512, 256, 128], [512, 256, 128, 64]]
