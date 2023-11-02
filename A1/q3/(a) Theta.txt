@@ -1,0 +1,3 @@
+Stopping Criterion (|ε| > |Δ cost|):		1e-20
+θ:										[0.40125316054552385, 2.588547696944719, -2.725588487840396]
+Number of iterations:					9

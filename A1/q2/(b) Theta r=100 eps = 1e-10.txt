@@ -1,0 +1,6 @@
+Learning Rate:							0.001
+Stopping Criterion (|ε| > |Δ J|):		1e-10
+θ:										[3.0101725319587356, 0.9985040828947164, 1.9955465314703646]
+Number of iterations:					70000
+Number of epochs:						7
+Time Taken:								0.722054 sec

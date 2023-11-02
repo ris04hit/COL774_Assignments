@@ -1,0 +1,4 @@
+Learning Rate:							0.1
+Stopping Criterion (|ε| > |Δ J|):		1e-14
+θ:										[0.9966198147612716, 0.0013401956349387363]
+Number of iterations:					143

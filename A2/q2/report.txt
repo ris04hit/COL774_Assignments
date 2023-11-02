@@ -1,0 +1,37 @@
+Number of Support Vectors (linear):			297
+Fraction of total data (linear):				0.06239495798319328
+Training Accuraccy SVM (linear):				0.9718487394957983
+Validation Accuraccy SVM (linear):			0.9475
+
+Value of b (linear):										4.1751605619869165
+Number of Support Vectors (gaussian):		394
+Number of same Support Vectors:					68
+Fraction of total data (gaussian):			0.08277310924369748
+Training Accuraccy SVM (gaussian):			0.9516806722689075
+Validation Accuraccy SVM (gaussian):		0.9375
+
+Value of b (gaussian):									-4.725221117859106
+Training Accuracy SVM (linear, LIBSVM):	97.16386554621849
+Validation Accuracy SVM (linear, LIBSVM):	94.75
+Training Accuracy SVM (gaussian, LIBSVM):	95.16806722689076
+Validation Accuracy SVM (gaussian, LIBSVM):	93.75
+Norm of diff of w for both method:			[[46768.69823885]]
+Value of b (LIBSVM linear):								4.174472409771019
+
+Support Vector Match (lin, LIBSVM lin):	286
+Support Vector Match (lin, LIBSVM gauss):	203
+Support Vector Match (gauss, LIBSVM lin):	84
+Support Vector Match (gauss, LIBSVM gauss):	207
+Support Vector Match (LIB lin, LIB gauss):	564
+
+Time for cvxopt linear kernel:					71.86766028404236
+Time for cvxopt gaussian kernel:				99.11658191680908
+Time for LIBSVM linear kernel:					7.354524612426758
+Time for LIBSVM gaussian kernel:				7.657436370849609
+
+Accuracy for Multi Class (CVXOPT):			0.55
+Accuracy for Multi Class (LIBSVM):			0.5608333333333333
+Time for CVXOPT Multi Class:						1868.9687612056732
+Time for LIBSVM Multi Class:						324.93426179885864
+
+Accuracy for k fold cross validation:	[16.11, 16.53, 56.34, 57.48, 60.47]
